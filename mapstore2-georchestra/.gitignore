@@ -1,0 +1,17 @@
+node_modules/
+node/
+dist/
+target/
+docs/source/_build
+docs/build
+docs/source/locale/**/*.mo
+*.sublime-*
+npm-debug.log
+coverage/
+**/.classpath
+**/.project
+**/.settings
+.vscode
+backend/.classpath
+backend/.project
+package-lock.json

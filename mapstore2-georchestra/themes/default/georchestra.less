@@ -1,0 +1,35 @@
+.georchestra-login {
+    background-color: white;
+    text-align: center;
+    span {
+        margin-top: 16px;
+        display: inline-block;
+    }
+}
+#georchestra-notallowed {
+    position: absolute;
+    width: 100%;
+}
+@label-weight: bold;
+.application-version {
+    .version-label {
+        font-weight: @label-weight;
+    }
+    .version-modules {
+        font-weight: @label-weight;
+        padding-right: 4px;
+        font-size: @font-size-small;
+    }
+    a:hover{
+        text-decoration: none;
+    }
+}
+
+// FIX FOR CONTENT TABS ON HOME PAGE
+.empty-state-container {
+    .empty-state-main-view {
+        .empty-state-image {
+            overflow: hidden;
+        }
+    }
+}

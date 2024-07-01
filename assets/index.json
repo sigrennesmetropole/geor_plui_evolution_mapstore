@@ -1,0 +1,13 @@
+{
+    "plugins": [
+        {
+            "name": "PluiEvolutionExtension",
+            "description": "PLUI Evolution Extension",
+            "dependencies": [],
+            "defaultConfig": {
+                "debugPluiEvolution": false,
+                "openAuto": false
+            }
+        }
+    ]
+}

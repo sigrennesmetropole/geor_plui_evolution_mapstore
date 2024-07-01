@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "es2015",
+        "allowSyntheticDefaultImports": false,
+        "baseUrl": "./",
+        "paths": {
+            "@mapstore/*": [
+                "MapStore2/web/client/*"
+            ],
+            "@js/*": [
+                "js/*"
+            ]
+        }
+    },
+    "include": [
+        "js/**/*",
+        "MapStore2/web/client/**/*",
+        "*.js",
+        "*.jsx"
+    ]
+}
