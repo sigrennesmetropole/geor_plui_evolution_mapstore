@@ -1,6 +1,6 @@
 import assign from 'object-assign';
 import {actions, status} from '../actions/plui-evolution-action';
-import {FEATURE_INFO_CLICK} from 'mapstore2/web/client/actions/mapInfo';
+import {FEATURE_INFO_CLICK} from "@mapstore/actions/mapInfo";
 
 const initialState = {
     user: null,

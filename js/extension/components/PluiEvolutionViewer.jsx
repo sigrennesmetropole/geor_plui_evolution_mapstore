@@ -8,7 +8,7 @@ import {
     Row
 } from 'react-bootstrap';
 import {PluiEvolutionRequestViewer} from "@js/extension/components/PluiEvolutionRequestViewer";
-import {reproject} from "mapstore2/web/client/utils/CoordinatesUtils";
+import {reproject} from "@mapstore/utils/CoordinatesUtils";
 import {DEFAULT_PROJECTION, SYSTEM_PROJECTION} from "@js/extension/constants/plui-evolution-constants";
 
 /**
