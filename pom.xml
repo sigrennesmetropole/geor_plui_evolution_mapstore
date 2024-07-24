@@ -2,25 +2,51 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<parent>
-		<artifactId>georchestra-plui-evolution</artifactId>
-		<groupId>org.georchestra</groupId>
-		<version>1.5.7</version>
-		<relativePath>../</relativePath>
-	</parent>
+
 	<modelVersion>4.0.0</modelVersion>
 
+    <groupId>org.georchestra</groupId>
 	<artifactId>georchestra-plui-evolution-mapstore-addon</artifactId>
+	<version>1.6.0</version>
 	<packaging>war</packaging>
 
 	<properties>
 		<finalName>plui-evolution</finalName>
 		<addon.project.location>${project.dir}</addon.project.location>
 		<addon.georchestra.location>./mapstore2-georchestra</addon.georchestra.location>
-		<addon.project.nodeinstallation>../node_installation</addon.project.nodeinstallation>
+		<addon.project.nodeinstallation>node_installation</addon.project.nodeinstallation>
+		<assemby.plugin.version>2.6</assemby.plugin.version>
+		<ant.plugin.version>3.0.0</ant.plugin.version>
 	</properties>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${assemby.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>${ant.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+
 		<finalName>${project.parent.artifactId}</finalName>
 		<plugins>
 			<plugin>
