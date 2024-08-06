@@ -26,6 +26,16 @@
 		<!-- sonar properties -->
 		<sonar.projectKey>${env.SONAR_KEY}${project.artifactId}</sonar.projectKey>
 		<sonar.projectName>${project.artifactId}</sonar.projectName>
+		<sonar.language>ts</sonar.language>
+		<sonar.nodejs.executable>
+			${env.CI_PROJECT_DIR}/${addon.project.nodeinstallation}/node/node
+		</sonar.nodejs.executable>
+		<sonar.sources>${addon.project.location}/js</sonar.sources>
+		<sonar.exclusions>**/node_modules/**/*, **/*.spec.ts, **/*.e2e.ts,
+			**/environments/**/*, **/*.routes.ts,
+			**/main.ts, **/test-setup.ts, **/polyfills.ts
+		</sonar.exclusions>
+		<sonar.coverage.exclusions>**/*.ts</sonar.coverage.exclusions>
 	</properties>
 
 	<build>
