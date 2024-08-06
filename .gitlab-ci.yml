@@ -27,7 +27,7 @@ stages:
   - deploy
 
 # Build job with maven plugin execution policies define in parent pom
-pluievolutionapi:build:
+pluievolutionfront:build:
   script:
     - PROJET_VERSION=$(sh ./mvnw $MAVEN_CLI_OPTS_VERSION)
     - echo "PROJET_VERSION=$PROJET_VERSION" >> build.env
@@ -45,7 +45,7 @@ pluievolutionapi:build:
     paths:
       - $CI_PROJECT_DIR/dist/PluiEvolutionExtension.zip
       
-pluievolutionapi:build:master:
+pluievolutionfront:build:master:
   script:
     - PROJET_VERSION=$(sh ./mvnw $MAVEN_CLI_OPTS_VERSION)
     - echo "PROJET_VERSION=$PROJET_VERSION" >> build.env
@@ -62,3 +62,43 @@ pluievolutionapi:build:master:
         - build.env
     paths:
       - $CI_PROJECT_DIR/dist/PluiEvolutionExtension.zip
+
+# Sonar code quality analysis - note a full test coverage report through a jacoco.exec merged file in base project folder
+pluievolutionfront:sonar:
+  stage: test
+  dependencies:
+    - pluievolutionfront:build
+  except:
+    refs:
+      - master
+      - open/master
+  allow_failure: true
+  script:
+    - >
+      sh ./mvnw $MAVEN_CLI_OPTS -U compile sonar:sonar
+      -Dsonar.host.url=$SONAR_URL
+      -Dsonar.login=$SONAR_TOKEN
+      -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA
+      -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME
+      -Dsonar.gitlab.project_id=$CI_PROJECT_ID
+      -Dsonar.branch.name=$CI_COMMIT_REF_NAME
+            
+
+# On master, do not use branch parameter
+pluievolutionfront:sonar:master:
+  stage: test
+  dependencies:
+    - pluievolutionfront:build
+  only:
+    refs:
+      - open/master
+  allow_failure: true
+  script:
+    - >
+      sh ./mvnw $MAVEN_CLI_OPTS -U compile sonar:sonar
+      -Dsonar.host.url=$SONAR_URL
+      -Dsonar.login=$SONAR_TOKEN
+      -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA
+      -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME
+      -Dsonar.gitlab.project_id=$CI_PROJECT_ID      
+      
