@@ -5,7 +5,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.georchestra</groupId>
+	<groupId>org.georchestra</groupId>
 	<artifactId>georchestra-plui-evolution-mapstore-addon</artifactId>
 	<version>1.6.0</version>
 	<packaging>war</packaging>
@@ -17,6 +17,17 @@
 		<addon.project.nodeinstallation>node_installation</addon.project.nodeinstallation>
 		<assemby.plugin.version>2.6</assemby.plugin.version>
 		<ant.plugin.version>3.1.0</ant.plugin.version>
+
+
+		<!-- Project properties -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<!-- sonar properties -->
+		<sonar.projectKey>${env.SONAR_KEY}${project.artifactId}</sonar.projectKey>
+		<sonar.projectName>${project.artifactId}</sonar.projectName>
+		<sonar.exclusions>**/config/*.java,**/exception/**/*.java,**/test/*.java</sonar.exclusions>
+		<sonar.global.test.exclusions>**/*spec.ts</sonar.global.test.exclusions>
 	</properties>
 
 	<build>
@@ -140,7 +151,7 @@
 		</profile>
 
 		<!-- Profil de production (utilisé sur la plateforme de DEV, QUALIF et
-			PROD) -->
+		PROD) -->
 		<profile>
 			<id>prod</id>
 			<properties>
