@@ -36,6 +36,9 @@
 			**/main.ts, **/test-setup.ts, **/polyfills.ts
 		</sonar.exclusions>
 		<sonar.coverage.exclusions>**/*.ts</sonar.coverage.exclusions>
+
+		<maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
+		<maven.jococo.plugin>0.8.4</maven.jococo.plugin>
 	</properties>
 
 	<build>
@@ -61,6 +64,25 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
+				</plugin>
+
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${maven.jococo.plugin}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<argLine>-Dfile.encoding=UTF-8</argLine>
+					</configuration>
+					<version>${maven-surefire-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>3.11.0.3922</version>
 				</plugin>
 
 			</plugins>
