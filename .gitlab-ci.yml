@@ -12,8 +12,7 @@ cache:
   paths:
     - $CI_PROJECT_DIR/.m2/repository/**/*
     - $CI_PROJECT_DIR/**/target/**/*
-    - **/target/
-
+    
 default:
   image: maven:3.6.3-jdk-11
   
@@ -45,7 +44,7 @@ pluievolutionfront:build:
         - build.env
     paths:
       - $CI_PROJECT_DIR/dist/PluiEvolutionExtension.zip
-      - **/target/
+      - '**/target/'
       
 pluievolutionfront:build:master:
   script:
