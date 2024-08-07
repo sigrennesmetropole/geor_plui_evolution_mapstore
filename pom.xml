@@ -30,7 +30,7 @@
 		<sonar.nodejs.executable>
 			${env.CI_PROJECT_DIR}/${addon.project.nodeinstallation}/node/node
 		</sonar.nodejs.executable>
-		<sonar.sources>js</sonar.sources>
+		<sonar.sources>ts</sonar.sources>
 		<sonar.exclusions>**/node_modules/**/*, **/*.spec.ts, **/*.e2e.ts,
 			**/environments/**/*, **/*.routes.ts,
 			**/main.ts, **/test-setup.ts, **/polyfills.ts
