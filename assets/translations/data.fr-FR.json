@@ -119,7 +119,8 @@
 			},
 			"name": "PLUi Evolution",
 			"loading": "En cours...",
-			"version": "Version : ",
+			"versionBack": "Version back : ",
+			"versionFront": "Version front : ",
 			"init": {
 				"loading": "En cours d'initialisation...",
 				"attachmentConfiguration":  {
