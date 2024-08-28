@@ -15,7 +15,7 @@
 		<addon.project.location>${project.dir}</addon.project.location>
 		<addon.georchestra.location>./mapstore2-georchestra</addon.georchestra.location>
 		<addon.project.nodeinstallation>node_installation</addon.project.nodeinstallation>
-		<assemby.plugin.version>2.6</assemby.plugin.version>
+		<assemby.plugin.version>3.7.1</assemby.plugin.version>
 		<ant.plugin.version>3.1.0</ant.plugin.version>
 
 
