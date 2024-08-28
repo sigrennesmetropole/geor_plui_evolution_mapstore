@@ -5,7 +5,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.georchestra</groupId>
+	<groupId>org.georchestra</groupId>
 	<artifactId>georchestra-plui-evolution-mapstore-addon</artifactId>
 	<version>1.6.0</version>
 	<packaging>war</packaging>
@@ -16,7 +16,29 @@
 		<addon.georchestra.location>./mapstore2-georchestra</addon.georchestra.location>
 		<addon.project.nodeinstallation>node_installation</addon.project.nodeinstallation>
 		<assemby.plugin.version>3.7.1</assemby.plugin.version>
-		<ant.plugin.version>3.0.0</ant.plugin.version>
+		<ant.plugin.version>3.1.0</ant.plugin.version>
+
+
+		<!-- Project properties -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<!-- sonar properties -->
+		<sonar.projectKey>${env.SONAR_KEY}${project.artifactId}</sonar.projectKey>
+		<sonar.projectName>${project.artifactId}</sonar.projectName>
+		<sonar.language>ts</sonar.language>
+		<sonar.nodejs.executable>
+			${env.CI_PROJECT_DIR}/${addon.project.nodeinstallation}/node/node
+		</sonar.nodejs.executable>
+		<sonar.sources>js</sonar.sources>
+		<sonar.exclusions>**/node_modules/**/*, **/*.spec.ts, **/*.e2e.ts,
+			**/environments/**/*, **/*.routes.ts,
+			**/main.ts, **/test-setup.ts, **/polyfills.ts
+		</sonar.exclusions>
+		<sonar.coverage.exclusions>**/*.ts</sonar.coverage.exclusions>
+
+		<maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
+		<maven.jococo.plugin>0.8.4</maven.jococo.plugin>
 	</properties>
 
 	<build>
@@ -44,10 +66,29 @@
 					<artifactId>maven-jar-plugin</artifactId>
 				</plugin>
 
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${maven.jococo.plugin}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<argLine>-Dfile.encoding=UTF-8</argLine>
+					</configuration>
+					<version>${maven-surefire-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>3.11.0.3922</version>
+				</plugin>
+
 			</plugins>
 		</pluginManagement>
 
-		<finalName>${project.parent.artifactId}</finalName>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -140,7 +181,7 @@
 		</profile>
 
 		<!-- Profil de production (utilisé sur la plateforme de DEV, QUALIF et
-			PROD) -->
+		PROD) -->
 		<profile>
 			<id>prod</id>
 			<properties>
