@@ -161,6 +161,7 @@ span .info {
 	margin-bottom: 10px;
 	display: flex;
 	justify-content: center;
+	font-size: 11px;
 }
 
 .plui-evolution-version {

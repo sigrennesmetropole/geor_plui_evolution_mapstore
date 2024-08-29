@@ -1,9 +1,10 @@
 /target/
 /node_modules/
+/MapStore2/node_modules/
 /.project
 /dist/
 /.settings/
 /.tern-project
-
+/node_installation/
 /.classpath
 /.factorypath
