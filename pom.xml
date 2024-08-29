@@ -2,26 +2,93 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<parent>
-		<artifactId>georchestra-plui-evolution</artifactId>
-		<groupId>org.georchestra</groupId>
-		<version>1.5.7</version>
-		<relativePath>../</relativePath>
-	</parent>
+
 	<modelVersion>4.0.0</modelVersion>
 
+	<groupId>org.georchestra</groupId>
 	<artifactId>georchestra-plui-evolution-mapstore-addon</artifactId>
+	<version>1.6.0</version>
 	<packaging>war</packaging>
 
 	<properties>
 		<finalName>plui-evolution</finalName>
 		<addon.project.location>${project.dir}</addon.project.location>
 		<addon.georchestra.location>./mapstore2-georchestra</addon.georchestra.location>
-		<addon.project.nodeinstallation>../node_installation</addon.project.nodeinstallation>
+		<addon.project.nodeinstallation>node_installation</addon.project.nodeinstallation>
+		<assemby.plugin.version>3.7.1</assemby.plugin.version>
+		<ant.plugin.version>3.1.0</ant.plugin.version>
+
+
+		<!-- Project properties -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<!-- sonar properties -->
+		<sonar.projectKey>${env.SONAR_KEY}${project.artifactId}</sonar.projectKey>
+		<sonar.projectName>${project.artifactId}</sonar.projectName>
+		<sonar.language>ts</sonar.language>
+		<sonar.nodejs.executable>
+			${env.CI_PROJECT_DIR}/${addon.project.nodeinstallation}/node/node
+		</sonar.nodejs.executable>
+		<sonar.sources>js</sonar.sources>
+		<sonar.exclusions>**/node_modules/**/*, **/*.spec.ts, **/*.e2e.ts,
+			**/environments/**/*, **/*.routes.ts,
+			**/main.ts, **/test-setup.ts, **/polyfills.ts
+		</sonar.exclusions>
+		<sonar.coverage.exclusions>**/*.ts</sonar.coverage.exclusions>
+
+		<maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
+		<maven.jococo.plugin>0.8.4</maven.jococo.plugin>
 	</properties>
 
 	<build>
-		<finalName>${project.parent.artifactId}</finalName>
+		<pluginManagement>
+			<plugins>
+
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${assemby.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>${ant.plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+				</plugin>
+
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${maven.jococo.plugin}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<argLine>-Dfile.encoding=UTF-8</argLine>
+					</configuration>
+					<version>${maven-surefire-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>3.11.0.3922</version>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -33,7 +100,7 @@
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
-				<version>1.6</version>
+				<version>1.15.0</version>
 				<configuration>
 					<workingDirectory>${addon.project.location}</workingDirectory>
 					<installDirectory>${addon.project.nodeinstallation}</installDirectory>
@@ -114,7 +181,7 @@
 		</profile>
 
 		<!-- Profil de production (utilisé sur la plateforme de DEV, QUALIF et
-			PROD) -->
+		PROD) -->
 		<profile>
 			<id>prod</id>
 			<properties>
