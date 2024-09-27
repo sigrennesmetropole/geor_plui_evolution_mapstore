@@ -37,7 +37,7 @@
 		</sonar.exclusions>
 		<sonar.coverage.exclusions>**/*.ts</sonar.coverage.exclusions>
 
-		<maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
+		<maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
 		<maven.jococo.plugin>0.8.12</maven.jococo.plugin>
 	</properties>
 
