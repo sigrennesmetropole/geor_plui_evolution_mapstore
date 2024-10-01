@@ -31,6 +31,7 @@ import {
 import {PluiEvolutionViewer} from "../components/PluiEvolutionViewer";
 import ResponsivePanel from "@mapstore/components/misc/panels/ResponsivePanel";
 import {toggleControl} from "@mapstore/actions/controls";
+import versionData from '../../version.json';
 
 export class PluiEvolutionPanelComponent extends React.Component {
     static propTypes = {
@@ -322,8 +323,12 @@ export class PluiEvolutionPanelComponent extends React.Component {
                         {this.renderModelClosing()}
                     </span>
                     {this.props.versionConfiguration && <div className="plui-evolution-version-container">
-                        <Message msgId="pluievolution.version"/>
+                        <Message msgId="pluievolution.versionBack"/>
                         <span className="plui-evolution-version">{this.props.versionConfiguration?.version}</span>
+                    </div>}
+                    {this.props.versionConfiguration && <div className="plui-evolution-version-container">
+                        <Message msgId="pluievolution.versionFront"/>
+                        <span className="plui-evolution-version">V{versionData?.version}</span>
                     </div>}
                 </ResponsivePanel>
             );

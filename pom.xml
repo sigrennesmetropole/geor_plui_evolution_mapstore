@@ -15,7 +15,7 @@
 		<addon.project.location>${project.dir}</addon.project.location>
 		<addon.georchestra.location>./mapstore2-georchestra</addon.georchestra.location>
 		<addon.project.nodeinstallation>node_installation</addon.project.nodeinstallation>
-		<assemby.plugin.version>2.6</assemby.plugin.version>
+		<assemby.plugin.version>3.7.1</assemby.plugin.version>
 		<ant.plugin.version>3.1.0</ant.plugin.version>
 
 
@@ -37,8 +37,8 @@
 		</sonar.exclusions>
 		<sonar.coverage.exclusions>**/*.ts</sonar.coverage.exclusions>
 
-		<maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
-		<maven.jococo.plugin>0.8.4</maven.jococo.plugin>
+		<maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
+		<maven.jococo.plugin>0.8.12</maven.jococo.plugin>
 	</properties>
 
 	<build>
@@ -100,7 +100,7 @@
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
-				<version>1.6</version>
+				<version>1.15.0</version>
 				<configuration>
 					<workingDirectory>${addon.project.location}</workingDirectory>
 					<installDirectory>${addon.project.nodeinstallation}</installDirectory>
