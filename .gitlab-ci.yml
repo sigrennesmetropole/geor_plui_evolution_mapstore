@@ -67,6 +67,7 @@ pluievolutionfront:build:master:
 # Sonar code quality analysis - note a full test coverage report through a jacoco.exec merged file in base project folder
 pluievolutionfront:sonar:
   stage: test
+  image: maven:3.9.9-eclipse-temurin-17
   dependencies:
     - pluievolutionfront:build
   except:
