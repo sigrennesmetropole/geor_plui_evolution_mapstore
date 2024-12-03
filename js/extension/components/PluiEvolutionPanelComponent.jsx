@@ -303,7 +303,7 @@ export class PluiEvolutionPanelComponent extends React.Component {
                     bsStyle="primary"
                     size={this.props.viewerMode ? this.props.viewerWidth : this.props.width }
                     title={<Message msgId="pluievolution.msgBox.title"/>}
-                    glyph="exclamation-sign"
+                    glyph={null}
                     onClose={() => this.cancel()}>
                     <span>
                         <div style={{'margin-top': '20px'}}>
@@ -404,9 +404,6 @@ export class PluiEvolutionPanelComponent extends React.Component {
             <Grid fluid className="ms-header" style={this.props.styling || this.props.mode !== "list" ? { width: '100%', boxShadow: 'none'} : { width: '100%' }}>
                 <Row>
                     <Col xs={2}>
-                        <Button className="square-button no-events">
-                            <Glyphicon glyph="exclamation-sign"/>
-                        </Button>
                     </Col>
                     <Col xs={8}>
                         <h4><Message msgId="pluievolution.msgBox.title"/></h4>

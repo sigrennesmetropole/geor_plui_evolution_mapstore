@@ -47,15 +47,13 @@ Ce projet utilise **MapStore** comme application de base. Assurez-vous d’avoir
 Dans l'application MapStore, ajoutez le plugin PLUI-Evolution dans la configuration des plugins pour qu'il soit reconnu et chargé correctement. Voici le contenu du fichier de configuration JSON :
 
 ````json  
-{  
- "plugins": { "PLUI-Evolution": 
-				 { "path": "/path/to/PLUI-Evolution/dist",
-				   "config": { "openAuto": true, 
-							   "option2": "value2" 
-							  } 
-				} 			
-			}
-}   
+{
+  "cfg": {
+    "debugPluiEvolution": false,
+    "openAuto": true
+  },
+  "override": {}
+}  
 ````  
 
 Vous pouvez également configurer des options spécifiques pour ajuster les fonctionnalités du plugin selon vos besoins.  
