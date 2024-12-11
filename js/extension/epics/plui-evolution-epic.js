@@ -47,7 +47,7 @@ import {
 } from '../actions/plui-evolution-action';
 import {
     DEFAULT_PROJECTION, DEFAULT_PROJECTION_CODE,
-    GeometryType,
+    GeometryType, PLUI_EVOLUTION_LAYER_NAME,
     PLUI_EVOLUTION_LAYER_TITLE,
     PLUIEVOLUTION_PANEL_WIDTH, PLUIEVOLUTION_VIEWER_WIDTH,
     PluiRequestType,
@@ -236,7 +236,7 @@ export const loadPluiLayerConfigurationEpic = (action$) =>
             return Rx.Observable.defer(() => axios.get(url))
                 .switchMap((response) => {
                     pluiEvolutionLayerId = response.data.layerWorkspace;
-                    pluiEvolutionLayerName = response.data.layerName;
+                    pluiEvolutionLayerName = response.data.layerName ? response.data.layerName : PLUI_EVOLUTION_LAYER_NAME;
                     pluiEvolutionLayerProjection = response.data.layerProjection ? response.data.layerProjection : DEFAULT_PROJECTION;
                     return Rx.Observable.of(loadedLayerConfiguration(response.data));
                 })
@@ -411,6 +411,7 @@ export const displayAllPluiRequest = (action$, store) =>
                         id: pluiEvolutionLayerId,
                         name: pluiEvolutionLayerName,
                         title: PLUI_EVOLUTION_LAYER_TITLE,
+                        layer: PLUI_EVOLUTION_LAYER_NAME,
                         type: "wms",
                         search: {
                             type: "wfs",
