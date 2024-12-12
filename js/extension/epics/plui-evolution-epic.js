@@ -236,7 +236,7 @@ export const loadPluiLayerConfigurationEpic = (action$) =>
             return Rx.Observable.defer(() => axios.get(url))
                 .switchMap((response) => {
                     pluiEvolutionLayerId = response.data.layerWorkspace;
-                    pluiEvolutionLayerName = response.data.layerName ? response.data.layerName : PLUI_EVOLUTION_LAYER_NAME;
+                    pluiEvolutionLayerName = response.data.layerName;
                     pluiEvolutionLayerProjection = response.data.layerProjection ? response.data.layerProjection : DEFAULT_PROJECTION;
                     return Rx.Observable.of(loadedLayerConfiguration(response.data));
                 })
@@ -398,41 +398,54 @@ export const initPluiDrawingSupportEpic = action$ =>
     action$.ofType(actions.PLUI_EVOLUTION_INIT_SUPPORT_DRAWING)
         .switchMap(() => Rx.Observable.of(changeMapInfoState(false)));
 
+
 export const displayAllPluiRequest = (action$, store) =>
     action$.ofType(actions.PLUI_EVOLUTION_DISPLAY_ALL)
         .switchMap(() => {
-            const pluiLayer = head(store.getState().layers.flat.filter(l => l.id === pluiEvolutionLayerId));
-            return Rx.Observable.from(
-                pluiLayer
-                    ? [refreshLayerVersion(pluiEvolutionLayerId)]
-                    : [addLayer({
-                        handleClickOnLayer: true,
-                        hideLoading: true,
-                        id: pluiEvolutionLayerId,
-                        name: pluiEvolutionLayerName,
-                        title: PLUI_EVOLUTION_LAYER_TITLE,
-                        layer: PLUI_EVOLUTION_LAYER_NAME,
-                        type: "wms",
-                        search: {
-                            type: "wfs",
-                            url: backendURLPrefix + "/carto/wfsRequest"
-                        },
-                        params: {
-                            exceptions: 'application/vnd.ogc.se_xml'
-                        },
-                        allowedSRS: pluiEvolutionLayerProjection,
-                        format: "image/png",
-                        singleTile: false,
-                        url: backendURLPrefix + "/carto/wmsRequest",
-                        visibility: true,
-                        featureInfo: {
-                            format: "PROPERTIES"
-                        }
-                    }),
-                        selectNode(pluiEvolutionLayerId,"layer",false)
-                    ]
-            );
+            // Appel explicite pour charger la configuration du layer
+            const loadConfiguration$ = Rx.Observable.defer(() => {
+                const url = backendURLPrefix + "/carto/layerConfiguration";
+                return axios.get(url).then(response => response.data);
+            });
+
+            return loadConfiguration$.switchMap((layerConfig) => {
+                // Récupérer les données nécessaires depuis la réponse
+                const layerName = layerConfig?.layerName;
+                const pluiLayer = head(store.getState().layers.flat.filter(l => l.id === pluiEvolutionLayerId));
+
+                return Rx.Observable.from(
+                    pluiLayer
+                        ? [refreshLayerVersion(pluiEvolutionLayerId)]
+                        : [addLayer({
+                            handleClickOnLayer: true,
+                            hideLoading: true,
+                            id: pluiEvolutionLayerId,
+                            name: layerName, // Utilisation de layerName récupéré
+                            title: PLUI_EVOLUTION_LAYER_TITLE,
+                            layer: layerName,
+                            type: "wms",
+                            search: {
+                                type: "wfs",
+                                url: backendURLPrefix + "/carto/wfsRequest"
+                            },
+                            params: {
+                                exceptions: 'application/vnd.ogc.se_xml'
+                            },
+                            allowedSRS: layerConfig.layerProjection || DEFAULT_PROJECTION,
+                            format: "image/png",
+                            singleTile: false,
+                            url: backendURLPrefix + "/carto/wmsRequest",
+                            visibility: true,
+                            featureInfo: {
+                                format: "PROPERTIES"
+                            }
+                        }),
+                            selectNode(pluiEvolutionLayerId, "layer", false)
+                        ]
+                );
+            }).catch(e => Rx.Observable.of(loadActionError("pluievolution.init.layerConfiguration.error", null, e)));
         });
+
 
 export const displayPluiEtablissement = (action$, store) =>
     action$.ofType(actions.PLUI_EVOLUTION_DISPLAY_ETABLISSEMENT)
