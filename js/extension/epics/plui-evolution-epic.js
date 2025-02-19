@@ -86,10 +86,24 @@ export const openPluievelutionPanelEpic = (action$, store) =>
 export const openAutoPluievelutionPanelEpic = (action$, store) =>
     action$.ofType(actions.PLUI_EVOLUTION_AUTO_OPEN_PANEL)
         .switchMap(() => {
-            let layout = store.getState().maplayout;
-            layout = {transform: layout.layout.transform, height: layout.layout.height, rightPanel: true, leftPanel: layout.layout.leftPanel, ...layout.boundingMapRect, right: PLUIEVOLUTION_PANEL_WIDTH + RIGHT_SIDEBAR_MARGIN_LEFT, boundingMapRect: {...layout.boundingMapRect, right: PLUIEVOLUTION_PANEL_WIDTH + RIGHT_SIDEBAR_MARGIN_LEFT}, boundingSidebarRect: layout.boundingSidebarRect};
-            currentLayout = layout;
-            return Rx.Observable.from([toggleControl('pluievolution'), updateDockPanelsList('pluievolution', 'add', 'right'), openPanel(null), pluiEvolutionUpdateMapLayout(layout)]);
+            const url = backendURLPrefix + "/carto/layerConfiguration";
+
+            return Rx.Observable.defer(() => axios.get(url))
+                .switchMap((response) => {
+                    const layerId = response.data.layerWorkspace;
+                    let layout = store.getState().maplayout;
+                    layout = {transform: layout.layout.transform, height: layout.layout.height, rightPanel: true, leftPanel: layout.layout.leftPanel, ...layout.boundingMapRect, right: PLUIEVOLUTION_PANEL_WIDTH + RIGHT_SIDEBAR_MARGIN_LEFT, boundingMapRect: {...layout.boundingMapRect, right: PLUIEVOLUTION_PANEL_WIDTH + RIGHT_SIDEBAR_MARGIN_LEFT}, boundingSidebarRect: layout.boundingSidebarRect};
+                    currentLayout = layout;
+
+                    return Rx.Observable.from([
+                        toggleControl('pluievolution'),
+                        updateDockPanelsList('pluievolution', 'add', 'right'),
+                        openPanel(null),
+                        pluiEvolutionUpdateMapLayout(layout),
+                        selectNode(layerId, "layer", true)
+                    ]);
+                })
+                .catch(e => Rx.Observable.of(loadActionError("pluievolution.init.layerConfiguration.error", null, e)));
         });
 
 export const closePluievelutionPanelEpic = (action$, store) =>
