@@ -65,4 +65,4 @@ Le numéro de version du front qui s'affiche est celui qui est configuré manuel
 
 ## Licence
 
-Ce projet est sous licence GNU. Veuillez consulter le fichier LICENSE pour plus de détails.
+Ce projet est sous licence Geosolution. Veuillez consulter le fichier LICENSE pour plus de détails.
