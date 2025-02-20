@@ -42,7 +42,7 @@ jobs:
       - run: npm ci
       - run: npm run ext:build
       - name: "Upload Artifact"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: Artifacts
           path: ./dist/PluiEvolutionExtension.zip
