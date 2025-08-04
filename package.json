@@ -103,14 +103,15 @@
         "style-loader": "2.0.0",
         "url-loader": "0.5.7",
         "vusion-webfonts-generator": "0.4.1",
-        "webpack": "5.9.0",
+        "webpack": "5.54",
         "webpack-bundle-size-analyzer": "2.0.2",
         "webpack-cli": "4.10.0",
         "webpack-dev-server": "3.11.0"
     },
     "dependencies": {
         "mapstore2": "file:MapStore2",
-        "node-polyfill-webpack-plugin": "^2.0.1"
+        "node-polyfill-webpack-plugin": "^2.0.1",
+        "wepack": "^0.0.1"
     },
     "scripts": {
         "postinstall": "node MapStore2/utility/build/postInstall.js",

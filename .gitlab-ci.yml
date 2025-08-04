@@ -4,7 +4,7 @@ variables:
   MAVEN_CLI_OPTS_VERSION: "help:evaluate -Dexpression=project.version -q -DforceStdout"
   GIT_SUBMODULE_STRATEGY: recursive
   NODE_OPTIONS: "--max-old-space-size=8192"
-  
+  OSS_MVN_DISABLE: "true"
 
 # Cache policy - Share target folders between jobs - Note that key is related to a commit and is purged automatically after pipeline execution
 cache:
@@ -12,7 +12,11 @@ cache:
   paths:
     - $CI_PROJECT_DIR/.m2/repository/**/*
     - $CI_PROJECT_DIR/**/target/**/*
-    
+
+include:
+  - project: 'boost/template-ci/pipelines/common'
+    file: 'securite/oss-index/oss-index-template.yml'
+
 default:
   image: maven:3.6.3-jdk-11
   
@@ -24,7 +28,9 @@ default:
 stages:
   - build
   - test
+  - sast
   - deploy
+  - delivering
 
 # Build job with maven plugin execution policies define in parent pom
 pluievolutionfront:build:
@@ -103,4 +109,26 @@ pluievolutionfront:sonar:master:
       -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA
       -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME
       -Dsonar.gitlab.project_id=$CI_PROJECT_ID      
-      
+
+## Livraison Github
+push-to-github:
+  image: maven:3.9.0-eclipse-temurin-17
+  stage: delivering
+  dependencies:
+    - pluievolutionfront:build
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      when: manual
+  before_script:
+    - apt update && apt install -y gettext-base
+    - envsubst '${MVN_GROUP} ${MVN_RELEASE} ${MVN_SNAPSHOTS}' < pom.xml > pom.subst && mv -f pom.subst pom.xml
+  script:
+    - cd ci
+    - apt install -y rsync
+    - chmod +x push-to-github.sh
+    - ./push-to-github.sh
+  variables:
+    SOURCE_REPOSITORY: $CI_PROJECT_DIR
+    # Les variables GITHUB_RM_ACCOUNT, GITHUB_RM_LOGIN et GIT_TOKEN sont à définir manuellement avant de lancer le job
+    GIT_REMOTE: "https://$GITHUB_RM_ACCOUNT:$GIT_TOKEN@github.com/sigrennesmetropole/geor_plui_evolution_mapstore.git"
+    COMMIT_MESSAGE: $GITHUB_COMMIT_MESSAGE
