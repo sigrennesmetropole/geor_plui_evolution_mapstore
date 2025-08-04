@@ -5,7 +5,7 @@
 
 ## Installation
 
-Une installation de NodeJS  >=  12.16.1 est prérequise  ([téléchargement](https://nodejs.org/en/download/releases/)).
+Une installation de NodeJS  >=  16.20.2 est prérequise  ([téléchargement](https://nodejs.org/en/download/releases/)).
 
 - Réaliser un clone du dépôt avec l'option  `--recursive` afin de récupérer les sous-modules :
 ```bash  
