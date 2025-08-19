@@ -20,14 +20,16 @@ export class PluiEvolutionViewer extends React.Component {
         openPanel: PropTypes.func,
         closeViewer: PropTypes.func,
         viewerMode: PropTypes.bool,
-        response: PropTypes.object
+        response: PropTypes.object,
+        procedurePluiToExclude: PropTypes.object
     };
 
     static defaultProps = {
         openPanel: () => {},
         closeViewer: () => {},
         viewerMode: false,
-        response: {features: []}
+        response: {features: []},
+        procedurePluiToExclude: { concertation: [], approbation: [] }
     }
 
     constructor(props) {
@@ -52,7 +54,9 @@ export class PluiEvolutionViewer extends React.Component {
                     openPanel={this.props.openPanel}
                     response={this.props.response}
                     index={this.state.index}
-                    viewerMode={this.props.viewerMode}/>
+                    viewerMode={this.props.viewerMode}
+                    procedurePluiToExclude={this.props.procedurePluiToExclude}
+                    />
                 </Form>
             </div>
             )

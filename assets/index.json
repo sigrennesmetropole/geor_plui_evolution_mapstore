@@ -6,7 +6,11 @@
             "dependencies": [],
             "defaultConfig": {
                 "debugPluiEvolution": false,
-                "openAuto": false
+                "openAuto": false,
+                "procedurePluiToExclude": {
+                  "concertation": [],
+                  "approbation": []
+                }
             }
         }
     ]

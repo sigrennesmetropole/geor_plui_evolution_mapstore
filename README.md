@@ -5,7 +5,7 @@
 
 ## Installation
 
-Une installation de NodeJS  >=  16.20.2 est prérequise  ([téléchargement](https://nodejs.org/en/download/releases/)).
+Une installation de NodeJS  >=  12.16.1 est prérequise  ([téléchargement](https://nodejs.org/en/download/releases/)).
 
 - Réaliser un clone du dépôt avec l'option  `--recursive` afin de récupérer les sous-modules :
 ```bash  
@@ -50,14 +50,19 @@ Dans l'application MapStore, ajoutez le plugin PLUI-Evolution dans la configurat
 {
   "cfg": {
     "debugPluiEvolution": false,
-    "openAuto": true
+    "openAuto": true,
+    "procedurePluiToExclude": {
+      "concertation": [],
+      "approbation": []
+    }
   },
   "override": {}
 }  
 ````  
 
 Vous pouvez également configurer des options spécifiques pour ajuster les fonctionnalités du plugin selon vos besoins.  
-L'option **openAuto** permet par exemple l'activation par défaut du module dans les contextes mapstore.
+- L'option **openAuto** permet par exemple l'activation par défaut du module dans les contextes mapstore.
+- La variable **procedurePluiToExclude** permet de lister toutes les valeurs de procédure plui que l'administrateur du portail souhaite exclure distinctivement pour la concertation et l'approbation.
 
 ## Version
 

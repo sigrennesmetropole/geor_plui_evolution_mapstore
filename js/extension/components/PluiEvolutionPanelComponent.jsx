@@ -340,7 +340,7 @@ export class PluiEvolutionPanelComponent extends React.Component {
     renderViewer() {
         return (
             <PluiEvolutionViewer viewerMode={this.props.viewerMode} response={this.props.response}
-            openPanel={this.props.openPanel} closeViewer={this.props.closeViewer}/>
+            openPanel={this.props.openPanel} closeViewer={this.props.closeViewer} procedurePluiToExclude={this.props.procedurePluiToExclude}/>
         );
     }
 

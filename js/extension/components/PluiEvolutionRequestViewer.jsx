@@ -14,7 +14,8 @@ export class PluiEvolutionRequestViewer extends React.Component {
         closeViewer: PropTypes.func,
         response: PropTypes.object,
         index: PropTypes.number,
-        viewerMode: PropTypes.bool
+        viewerMode: PropTypes.bool,
+        procedurePluiToExclude: PropTypes.object
     };
 
     static defaultProps = {
@@ -23,7 +24,8 @@ export class PluiEvolutionRequestViewer extends React.Component {
         closeViewer: () => {},
         response: {features: []},
         index: 0,
-        viewerMode: false
+        viewerMode: false,
+        procedurePluiToExclude: { concertation: [], approbation: [] }
     }
 
     constructor(props) {
@@ -166,6 +168,32 @@ export class PluiEvolutionRequestViewer extends React.Component {
                         </Col>
                     </FormGroup>
                 </fieldset>
+                {!this.props.procedurePluiToExclude.concertation.includes(pluiRequest.plui_procedure) && <fieldset>
+                    <FormGroup controlId="pluievolution.concertation">
+                        <ControlLabel className="col-sm-4">
+                            <Message msgId="pluievolution.concertation.title"/>
+                        </ControlLabel>
+                        <Col sm={8}>
+                            {
+                                !!pluiRequest.concertation ? pluiRequest.concertation :
+                                    (<Message msgId="pluievolution.concertation.empty"/>)
+                            }
+                        </Col>
+                    </FormGroup>
+                </fieldset>}
+                {!this.props.procedurePluiToExclude.approbation.includes(pluiRequest.plui_procedure) && <fieldset>
+                    <FormGroup controlId="pluievolution.approbation">
+                        <ControlLabel className="col-sm-4">
+                            <Message msgId="pluievolution.approbation.title"/>
+                        </ControlLabel>
+                        <Col sm={8}>
+                            {
+                                !!pluiRequest.approbation ? pluiRequest.approbation :
+                                    (<Message msgId="pluievolution.approbation.empty"/>)
+                            }
+                        </Col>
+                    </FormGroup>
+                </fieldset>}
             </div>
         )
     }
