@@ -1,5 +1,4 @@
 import React from 'react';
-import {Glyphicon} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {createControlEnabledSelector} from '@mapstore/selectors/controls';
 import Message from '@mapstore/components/I18N/Message';

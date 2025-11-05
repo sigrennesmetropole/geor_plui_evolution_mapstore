@@ -1,11 +1,8 @@
 import React from "react";
 import {PropTypes} from 'prop-types';
 import {
-    Col,
     Form,
     Glyphicon,
-    Grid,
-    Row
 } from 'react-bootstrap';
 import {PluiEvolutionRequestViewer} from "@js/extension/components/PluiEvolutionRequestViewer";
 import {reproject} from "@mapstore/utils/CoordinatesUtils";
@@ -51,11 +48,12 @@ export class PluiEvolutionViewer extends React.Component {
                     {this.renderCoordinates()}
                     {this.renderPluiRequestsNavigation()}
                     <PluiEvolutionRequestViewer closeViewer={this.props.closeViewer}
-                    openPanel={this.props.openPanel}
-                    response={this.props.response}
-                    index={this.state.index}
-                    viewerMode={this.props.viewerMode}
-                    procedurePluiToExclude={this.props.procedurePluiToExclude}
+                                                openPanel={this.props.openPanel}
+                                                response={this.props.response}
+                                                index={this.state.index}
+                                                onNavigate={(newIndex) => this.setState({index: newIndex})}
+                                                viewerMode={this.props.viewerMode}
+                                                procedurePluiToExclude={this.props.procedurePluiToExclude}
                     />
                 </Form>
             </div>
@@ -73,6 +71,7 @@ export class PluiEvolutionViewer extends React.Component {
         return(
             <div className="button-navigation">
                 <button
+                    type="button"
                     className="square-button-md btn btn-primary"
                     disabled={this.state.index === 0}
                     onClick={this.handleClickButtonDisplayTaskBefore}>
@@ -82,6 +81,7 @@ export class PluiEvolutionViewer extends React.Component {
                     {this.state.index + 1} / {this.props.response?.features?.length}
                 </h4>
                 <button
+                    type="button"
                     className="square-button-md btn btn-primary"
                     disabled={this.state.index === this.props.response?.features?.length - 1}
                     onClick={this.handleClickButtonDisplayTaskAfter}>
@@ -115,22 +115,21 @@ export class PluiEvolutionViewer extends React.Component {
     /**
      * Action pour afficher la demande plui suivante
      */
-    handleClickButtonDisplayTaskAfter = () => {
-        this.setState({index : ++this.state.index});
+    handleClickButtonDisplayTaskAfter = (event) => {
+        event.preventDefault();
+        this.setState((prevState) => ({
+            index: prevState.index + 1
+        }));
     }
 
     /**
      * Action pour afficher la demande plui précédente
      */
-    handleClickButtonDisplayTaskBefore = () => {
-        this.setState({index : --this.state.index});
+    handleClickButtonDisplayTaskBefore = (event) => {
+        event.preventDefault();
+        this.setState((prevState) => ({
+            index: prevState.index - 1
+        }));
     }
 
-
-    /**
-     * Permet de fermer le viewer
-     */
-    close = () => {
-        this.props.closeViewer();
-    }
 }

@@ -1,6 +1,6 @@
 import * as Rx from 'rxjs';
 import axios from 'axios';
-import {head} from 'lodash';
+import head from 'lodash/head';
 import {saveAs} from 'file-saver';
 import {changeDrawingStatus, GEOMETRY_CHANGED} from "@mapstore/actions/draw";
 import {addLayer, refreshLayerVersion, selectNode} from '@mapstore/actions/layers';
@@ -47,7 +47,7 @@ import {
 } from '../actions/plui-evolution-action';
 import {
     DEFAULT_PROJECTION, DEFAULT_PROJECTION_CODE,
-    GeometryType, PLUI_EVOLUTION_LAYER_NAME,
+    GeometryType,
     PLUI_EVOLUTION_LAYER_TITLE,
     PLUIEVOLUTION_PANEL_WIDTH, PLUIEVOLUTION_VIEWER_WIDTH,
     PluiRequestType,
@@ -62,9 +62,8 @@ import Proj4js from 'proj4';
 import {
     FORCE_UPDATE_MAP_LAYOUT, forceUpdateMapLayout,
     UPDATE_MAP_LAYOUT,
-    updateDockPanelsList, updateMapLayout
+    updateDockPanelsList
 } from "@mapstore/actions/maplayout";
-import {updateMapLayoutEpic} from "@mapstore/epics/maplayout";
 
 let backendURLPrefix = "/pluievolution";
 let pluiEvolutionLayerId;

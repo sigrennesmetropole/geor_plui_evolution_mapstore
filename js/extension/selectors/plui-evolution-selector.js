@@ -1,5 +1,5 @@
 import {createSelector} from 'reselect';
-import {get} from "lodash";
+import get from "lodash/get";
 import {status} from "../actions/plui-evolution-action";
 
 export const getPluiEvolution = state => get(state, "pluievolution");

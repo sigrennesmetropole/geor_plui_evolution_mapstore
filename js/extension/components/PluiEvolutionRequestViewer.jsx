@@ -39,10 +39,6 @@ export class PluiEvolutionRequestViewer extends React.Component {
         this.setState({initialized: false, index: this.props.index});
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-
-    }
-
     render() {
         if (this.props.response.features.length > 0) {
             return (
@@ -69,6 +65,7 @@ export class PluiEvolutionRequestViewer extends React.Component {
             return (
                 <div className="button-navigation">
                     <button
+                        type="button"
                         className="square-button-md btn btn-primary"
                         disabled={this.state.index === 0}
                         onClick={this.handleClickButtonDisplayTaskBefore}>
@@ -76,6 +73,7 @@ export class PluiEvolutionRequestViewer extends React.Component {
                     </button>
                     <span>{ this.state.index + 1 } / {this.props.response.features.length}</span>
                     <button
+                        type="button"
                         className="square-button-md btn btn-primary"
                         disabled={this.state.index === this.props.response.features.length - 1}
                         onClick={this.handleClickButtonDisplayTaskAfter}>
@@ -162,7 +160,7 @@ export class PluiEvolutionRequestViewer extends React.Component {
                         </ControlLabel>
                         <Col sm={8} >
                             {
-                                !!pluiRequest.plui_procedure ? pluiRequest.plui_procedure :
+                                 pluiRequest.plui_procedure ??
                                     (<Message msgId="pluievolution.pluiProcedure.empty"/>)
                             }
                         </Col>
@@ -175,8 +173,8 @@ export class PluiEvolutionRequestViewer extends React.Component {
                         </ControlLabel>
                         <Col sm={8}>
                             {
-                                !!pluiRequest.concertation ? pluiRequest.concertation :
-                                    (<Message msgId="pluievolution.concertation.empty"/>)
+                                pluiRequest.concertation ??
+                                (<Message msgId="pluievolution.concertation.empty"/>)
                             }
                         </Col>
                     </FormGroup>
@@ -188,7 +186,7 @@ export class PluiEvolutionRequestViewer extends React.Component {
                         </ControlLabel>
                         <Col sm={8}>
                             {
-                                !!pluiRequest.approbation ? pluiRequest.approbation :
+                                 pluiRequest.approbation ??
                                     (<Message msgId="pluievolution.approbation.empty"/>)
                             }
                         </Col>
@@ -239,14 +237,28 @@ export class PluiEvolutionRequestViewer extends React.Component {
     /**
      * Action pour afficher la demande plui suivante
      */
-    handleClickButtonDisplayTaskAfter = () => {
-        this.setState({index : ++this.state.index});
+    handleClickButtonDisplayTaskAfter = (event) => {
+        event.preventDefault();
+        this.setState((prevState) => ({
+            index: prevState.index + 1
+        }), () => {
+            if (this.props.onNavigate) {
+                this.props.onNavigate(this.state.index);
+            }
+        });
     }
 
     /**
      * Action pour afficher la demande plui précédente
      */
-    handleClickButtonDisplayTaskBefore = () => {
-        this.setState({index : --this.state.index});
+    handleClickButtonDisplayTaskBefore = (event) => {
+        event.preventDefault();
+        this.setState((prevState) => ({
+            index: prevState.index - 1
+        }), () => {
+            if (this.props.onNavigate) {
+                this.props.onNavigate(this.state.index);
+            }
+        });
     }
 }
