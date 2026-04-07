@@ -379,15 +379,21 @@ export const savePluiRequest = (action$) =>
                 .catch(e => {
                     // Erreur lors de l'enregistrement de la requete plui
                     if (e.saveError) {
+                        const backendLabel = e.response && e.response.data && e.response.data.label || '';
+                        const isOutsideArea = e.response && e.response.status === 400
+                            && backendLabel.includes('emprise géographique');
+                        const errorKey = isOutsideArea
+                            ? 'pluievolution.localisation.error.outsideArea'
+                            : 'pluievolution.create.error';
                         return Rx.Observable.from([
-                            loadActionError("pluievolution.create.error", null, e),
-                            error({
+                            loadActionError(errorKey, null, e),
+                            show({
                                 title: "pluievolution.error.title",
-                                message: "pluievolution.create.error",
+                                message: errorKey,
                                 uid: "pluievolution.msgBox.requestSaved",
                                 position: "tr",
                                 autoDismiss: 5
-                            })
+                            }, isOutsideArea ? 'warning' : 'error')
                         ])
                     }
 

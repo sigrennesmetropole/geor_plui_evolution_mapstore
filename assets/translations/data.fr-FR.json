@@ -24,10 +24,10 @@
         "error": "Le sujet de la demande est absent"
       },
       "object": {
-        "title": "Objet de la demande",
+        "title": "Description",
         "count": "nombre de caracteres restants:",
-        "placeholder": "Saisissez l'objet de la demande",
-        "error": "L'objet de la demande est absent"
+        "placeholder": "Saisissez la description de la demande",
+        "error": "La description de la demande est absente"
       },
       "concertation": {
         "title": "Concertation/Enq. publique : modif. proposée",
@@ -104,7 +104,8 @@
         "error": {
           "geolocate": "La localisation de la demande n'est pas définie",
           "etablissement": "Erreur lors de la localisation de l'établissement",
-          "cityHall": "La mairie n'a pas été sélectionnée"
+          "cityHall": "La mairie n'a pas été sélectionnée",
+          "outsideArea": "Le point dessiné se situe en dehors de l'emprise géographique de votre organisation"
         }
       },
       "type": {

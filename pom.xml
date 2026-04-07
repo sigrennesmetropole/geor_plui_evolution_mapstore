@@ -7,7 +7,7 @@
 
 	<groupId>org.georchestra</groupId>
 	<artifactId>georchestra-plui-evolution-mapstore-addon</artifactId>
-	<version>1.9.3</version>
+	<version>2.0.0</version>
 	<packaging>war</packaging>
 
 	<properties>
@@ -15,9 +15,8 @@
 		<addon.project.location>${project.dir}</addon.project.location>
 		<addon.georchestra.location>./mapstore2-georchestra</addon.georchestra.location>
 		<addon.project.nodeinstallation>node_installation</addon.project.nodeinstallation>
-		<assemby.plugin.version>3.7.1</assemby.plugin.version>
-		<ant.plugin.version>3.1.0</ant.plugin.version>
-
+		<assemby.plugin.version>3.8.0</assemby.plugin.version>
+		<ant.plugin.version>3.2.0</ant.plugin.version>
 
 		<!-- Project properties -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,6 +25,7 @@
 		<!-- sonar properties -->
 		<sonar.projectKey>${env.SONAR_KEY}${project.artifactId}</sonar.projectKey>
 		<sonar.projectName>${project.artifactId}</sonar.projectName>
+		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
 		<sonar.language>ts</sonar.language>
 		<sonar.nodejs.executable>
 			${env.CI_PROJECT_DIR}/${addon.project.nodeinstallation}/node/node
@@ -37,8 +37,8 @@
 		</sonar.exclusions>
 		<sonar.coverage.exclusions>**/*.ts</sonar.coverage.exclusions>
 
-		<maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
-		<maven.jococo.plugin>0.8.12</maven.jococo.plugin>
+		<maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
+		<maven.jacoco.plugin>0.8.14</maven.jacoco.plugin>
 	</properties>
 
 	<build>
@@ -69,15 +69,16 @@
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>${maven.jococo.plugin}</version>
+					<version>${maven.jacoco.plugin}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<configuration>
-						<argLine>-Dfile.encoding=UTF-8</argLine>
-					</configuration>
 					<version>${maven-surefire-plugin.version}</version>
+					<configuration>
+						<argLine>-Dfile.encoding=UTF-8 --add-opens
+							java.base/java.util=ALL-UNNAMED</argLine>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
@@ -136,8 +137,8 @@
 							<goal>install-node-and-npm</goal>
 						</goals>
 						<configuration>
-							<nodeVersion>v16.20.2</nodeVersion>
-							<npmVersion>8.19.4</npmVersion>
+							<nodeVersion>v22.21.1</nodeVersion>
+							<npmVersion>10.8.2</npmVersion>
 						</configuration>
 					</execution>
 
@@ -178,6 +179,43 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<excludes>
+						<exclude>**/*.ts</exclude>
+						<exclude>**/*Test.java</exclude>
+						<exclude>**/*Controller.java</exclude>
+						<exclude>**/*Mapper.java</exclude>
+						<exclude>**/*Exception.java</exclude>
+						<exclude>**/*Bean.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>@{argLine}</argLine>
+				</configuration>
 			</plugin>
 		</plugins>
 

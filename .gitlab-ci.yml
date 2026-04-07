@@ -14,8 +14,16 @@ cache:
     - $CI_PROJECT_DIR/**/target/**/*
 
 include:
-  - project: 'boost/template-ci/pipelines/common'
-    file: 'securite/oss-index/oss-index-template.yml'
+  - component: $CI_SERVER_FQDN/boost/ci-component/security/oss-npm@2.0.0
+    inputs:
+      oss_package_json : "package-lock.json"
+  - component: '$CI_SERVER_FQDN/boost/ci-component/security/software-supply-chain-npm@1.4.0'
+    inputs:
+      ssc_lock_file: "package-lock.json"
+  - component: $CI_SERVER_FQDN/boost/ci-component/security/dependency-track@2.0.0
+  - component: $CI_SERVER_FQDN/boost/ci-component/security/cdxgen-sbom@2.0.1      
+    inputs:
+      exclude_paths: "MapStore2"
 
 default:
   image: maven:3.6.3-jdk-11
@@ -26,9 +34,10 @@ default:
 
 # Stages definition
 stages:
+  - sast
+  - post_sast
   - build
   - test
-  - sast
   - deploy
   - delivering
 
@@ -95,6 +104,7 @@ pluievolutionfront:sonar:
 # On master, do not use branch parameter
 pluievolutionfront:sonar:master:
   stage: test
+  image: maven:3.9.9-eclipse-temurin-17
   dependencies:
     - pluievolutionfront:build
   only:
@@ -112,8 +122,8 @@ pluievolutionfront:sonar:master:
 
 ## Livraison Github
 push-to-github:
-  image: maven:3.9.0-eclipse-temurin-17
   stage: delivering
+  image: maven:3.9.9-eclipse-temurin-17
   dependencies:
     - pluievolutionfront:build
   rules:
