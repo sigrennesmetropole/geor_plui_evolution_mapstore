@@ -19,17 +19,17 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.20.1]
+        node-version: [22.21.1]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: "true"
-      - name: Use Node.js 16.20.1
+      - name: Use Node.js 22.21.1
         uses: actions/setup-node@v2
         with:
-          node-version: "16.20.1"
+          node-version: "22.21.1"
         ############
         # CACHING
         ##########
