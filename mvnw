@@ -212,7 +212,10 @@ else
     if [ "$MVNW_VERBOSE" = true ]; then
       echo "Couldn't find .mvn/wrapper/maven-wrapper.jar, downloading it ..."
     fi
-    jarUrl="https://repo.maven.apache.org/maven2/io/takari/maven-wrapper/0.4.2/maven-wrapper-0.4.2.jar"
+    NSERVICE_BASIC=`printf "${SERVICE_LOGIN}:${SERVICE_PWD}" | base64`
+    NAUTHORIZATION_HEADER_RAW="\"Authorization: Basic ${NSERVICE_BASIC}\""
+    #jarUrl="https://repo.maven.apache.org/maven2/io/takari/maven-wrapper/0.4.2/maven-wrapper-0.4.2.jar"
+    jarUrl="https://nexus.boost.open.global/repository/public/io/takari/maven-wrapper/0.4.2/maven-wrapper-0.4.2.jar"
     while IFS="=" read key value; do
       case "$key" in (wrapperUrl) jarUrl="$value"; break ;;
       esac
@@ -226,12 +229,12 @@ else
         if [ "$MVNW_VERBOSE" = true ]; then
           echo "Found wget ... using wget"
         fi
-        wget "$jarUrl" -O "$wrapperJarPath"
+        wget --header=$NAUTHORIZATION_HEADER_RAW "$jarUrl" -O "$wrapperJarPath"
     elif command -v curl > /dev/null; then
         if [ "$MVNW_VERBOSE" = true ]; then
           echo "Found curl ... using curl"
         fi
-        curl -o "$wrapperJarPath" "$jarUrl"
+        curl --header "Authorization:${AUTHORIZATION_HEADER_RAW}" -o "$wrapperJarPath" "$jarUrl"
     else
         if [ "$MVNW_VERBOSE" = true ]; then
           echo "Falling back to using Java to download"

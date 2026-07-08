@@ -46,7 +46,6 @@ export class PluiEvolutionRequestViewer extends React.Component {
                     <Form>
                         {this.renderPluiRequestsNavigation()}
                         {this.renderPluiRequestInfo()}
-                        {this.renderPluiRequestButtonValidation()}
                     </Form>
                 </div>
             )

@@ -456,7 +456,7 @@ export const displayAllPluiRequest = (action$, store) =>
                             url: backendURLPrefix + "/carto/wmsRequest",
                             visibility: true,
                             featureInfo: {
-                                format: "PROPERTIES"
+                                format: "HTML"
                             }
                         }),
                             selectNode(pluiEvolutionLayerId, "layer", false)

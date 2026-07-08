@@ -1,10 +1,11 @@
 # Pipeline variables
 variables:
   MAVEN_CLI_OPTS: "-s .m2/settings.xml -Dmaven.repo.local=.m2/repository --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository -Djava.awt.headless=true"
+  MVN_ARGS: "-s /builds/rennes-metropole/plui-evolution/plui-evolution-front/.m2/settings.xml"
   MAVEN_CLI_OPTS_VERSION: "help:evaluate -Dexpression=project.version -q -DforceStdout"
   GIT_SUBMODULE_STRATEGY: recursive
   NODE_OPTIONS: "--max-old-space-size=8192"
-  OSS_MVN_DISABLE: "true"
 
 # Cache policy - Share target folders between jobs - Note that key is related to a commit and is purged automatically after pipeline execution
 cache:
@@ -14,68 +15,56 @@ cache:
     - $CI_PROJECT_DIR/**/target/**/*
 
 include:
-  - component: $CI_SERVER_FQDN/boost/ci-component/security/oss-npm@2.0.0
-    inputs:
-      oss_package_json : "package-lock.json"
-  - component: '$CI_SERVER_FQDN/boost/ci-component/security/software-supply-chain-npm@1.4.0'
-    inputs:
-      ssc_lock_file: "package-lock.json"
-  - component: $CI_SERVER_FQDN/boost/ci-component/security/dependency-track@2.0.0
-  - component: $CI_SERVER_FQDN/boost/ci-component/security/cdxgen-sbom@2.0.1      
+  - component: $CI_SERVER_FQDN/boost/ci-component/security/dependency-track@~latest
+  - component: $CI_SERVER_FQDN/boost/ci-component/security/cdxgen-sbom@~latest   
     inputs:
       exclude_paths: "MapStore2"
 
 default:
-  image: maven:3.6.3-jdk-11
-  
+  image: maven:3.9.9-eclipse-temurin-17
   before_script:
     - apt update && apt install -y gettext-base build-essential
     - envsubst '${MVN_GROUP} ${MVN_RELEASE} ${MVN_SNAPSHOTS}' < pom.xml > pom.subst && mv -f pom.subst pom.xml
 
 # Stages definition
 stages:
-  - sast
-  - post_sast
   - build
   - test
+  - sast
+  - post_sast  
   - deploy
   - delivering
 
 # Build job with maven plugin execution policies define in parent pom
 pluievolutionfront:build:
   script:
-    - PROJET_VERSION=$(sh ./mvnw $MAVEN_CLI_OPTS_VERSION)
+    - mvn help:evaluate -Dexpression=project.version $MAVEN_CLI_OPTS
+    - PROJET_VERSION=$(mvn $MAVEN_CLI_OPTS_VERSION $MAVEN_CLI_OPTS)
     - echo "PROJET_VERSION=$PROJET_VERSION" >> build.env
     - echo $PROJET_VERSION
-    - sh ./mvnw $MAVEN_CLI_OPTS -U package -Pprod
+    - mvn $MAVEN_CLI_OPTS -U package -Pprod
   stage: build
   except:
     refs:
       - master
       - open/master
   artifacts:
-    reports:
-      dotenv:
-        - build.env
     paths:
       - $CI_PROJECT_DIR/dist/PluiEvolutionExtension.zip
       - '**/target/'
       
 pluievolutionfront:build:master:
   script:
-    - PROJET_VERSION=$(sh ./mvnw $MAVEN_CLI_OPTS_VERSION)
+    - PROJET_VERSION=$(mvn $MAVEN_CLI_OPTS_VERSION)
     - echo "PROJET_VERSION=$PROJET_VERSION" >> build.env
     - echo $PROJET_VERSION
-    - sh ./mvnw $MAVEN_CLI_OPTS -U package -DskipTests -Pprod 
+    - mvn $MAVEN_CLI_OPTS -U package -DskipTests -Pprod 
   stage: build
   only:
     refs:
       - master
       - open/master   
   artifacts:
-    reports:
-      dotenv:
-        - build.env
     paths:
       - $CI_PROJECT_DIR/dist/PluiEvolutionExtension.zip
 
@@ -92,7 +81,7 @@ pluievolutionfront:sonar:
   allow_failure: true
   script:
     - >
-      sh ./mvnw $MAVEN_CLI_OPTS -U compile sonar:sonar
+      mvn $MAVEN_CLI_OPTS -U compile sonar:sonar
       -Dsonar.host.url=$SONAR_URL
       -Dsonar.login=$SONAR_TOKEN
       -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA
@@ -113,7 +102,7 @@ pluievolutionfront:sonar:master:
   allow_failure: true
   script:
     - >
-      sh ./mvnw $MAVEN_CLI_OPTS -U compile sonar:sonar
+      mvn $MAVEN_CLI_OPTS -U compile sonar:sonar
       -Dsonar.host.url=$SONAR_URL
       -Dsonar.login=$SONAR_TOKEN
       -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA

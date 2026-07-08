@@ -375,8 +375,8 @@ export class PluiEvolutionPanelComponent extends React.Component {
             return (
                 <Form model={this.state.pluiRequest}>
                     {this.renderUserInformation()}
-                    {this.renderPluiManual()}
-                    {this.renderActivationButtonPluiRequestForm()}
+                    {!this.state.formRequestIsDisplayed && this.renderPluiManual()}
+                    {!this.state.formRequestIsDisplayed && this.renderActivationButtonPluiRequestForm()}
                     {this.renderPluiRequestInformations()}
                     {this.props.loading ? this.renderLoading("pluievolution.create.loading") : null}
                 </Form>
