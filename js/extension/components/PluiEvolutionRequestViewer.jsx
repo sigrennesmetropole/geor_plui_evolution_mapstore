@@ -108,7 +108,7 @@ export class PluiEvolutionRequestViewer extends React.Component {
                             <Message msgId="pluievolution.status.title"/>
                         </ControlLabel>
                         <Col sm={8} >
-                            <b><Message msgId={"pluievolution.status."+pluiRequest.status}/></b>
+                            <b><Message msgId={pluiRequest.status}/></b>
                         </Col>
                     </FormGroup>
                 </fieldset>
