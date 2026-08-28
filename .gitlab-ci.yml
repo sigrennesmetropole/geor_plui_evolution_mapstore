@@ -20,6 +20,7 @@ include:
     inputs:
       exclude_paths: "MapStore2"
 
+
 default:
   image: maven:3.9.9-eclipse-temurin-17
   before_script:

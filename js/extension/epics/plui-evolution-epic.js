@@ -112,7 +112,7 @@ export const closePluievelutionPanelEpic = (action$, store) =>
                 (action.control === "pluievolution" && !!store.getState() && !pluievolutionSidebarControlSelector(store.getState())))
         .switchMap((action) => {
             const actionsList = [updateDockPanelsList('pluievolution', 'remove', 'right')];
-            if (!!pluievolutionSidebarControlSelector(store.getState())) {
+            if (pluievolutionSidebarControlSelector(store.getState())) {
                 actionsList.push(toggleControl('pluievolution'));
             }
             if (store.getState().pluievolution.status === status.VIEW_REQUEST) {
@@ -128,7 +128,7 @@ export const closePluievelutionPanelEpic = (action$, store) =>
 
 export function onOpeningAnotherRightPanelPlui(action$, store) {
     return action$.ofType(TOGGLE_CONTROL)
-        .filter((action) => store && store.getState() &&
+        .filter((action) => store?.getState() &&
             action.control !== 'pluievolution' &&
             store.getState().maplayout.dockPanels.right.includes("pluievolution") &&
             store.getState().maplayout.dockPanels.right.includes(action.control))
@@ -139,7 +139,7 @@ export function onOpeningAnotherRightPanelPlui(action$, store) {
 
 export function onUpdatingLayoutWhenPluiPanelOpened(action$, store) {
     return action$.ofType(UPDATE_MAP_LAYOUT, FORCE_UPDATE_MAP_LAYOUT)
-        .filter((action) => store && store.getState() &&
+        .filter((action) => store?.getState() &&
             (action.source === "pluievolution" || action.source === undefined) &&
             !!pluievolutionSidebarControlSelector(store.getState()) &&
             currentLayout?.right !== action?.layout?.right)
@@ -161,7 +161,7 @@ export function loadPluiEvolutionViewerEpic(action$, store) {
         .filter(action => isPluievolutionActivateAndSelected(store.getState()))
         .switchMap((action) => {
             // si features présentent dans la zone de clic
-            if (action?.layer?.id && action?.data?.features && action.data.features.length) {
+            if (action?.layer?.id && action?.data?.features?.length) {
                 let layout = store.getState().maplayout;
                 layout = {transform: layout.layout.transform, height: layout.layout.height, rightPanel: true, leftPanel: false, ...layout.boundingMapRect, right: PLUIEVOLUTION_VIEWER_WIDTH + RIGHT_SIDEBAR_MARGIN_LEFT, boundingMapRect: {...layout.boundingMapRect, right: PLUIEVOLUTION_VIEWER_WIDTH + RIGHT_SIDEBAR_MARGIN_LEFT}, boundingSidebarRect: layout.boundingSidebarRect};
                 currentLayout = layout;
@@ -342,7 +342,7 @@ export const loadMeEpicPlui = (action$,store) =>
                 .catch(e => Rx.Observable.of(loadActionError("pluievolution.init.me.error", null, e)));
         });
 
-export const savePluiRequest = (action$) =>
+export const savePluiRequest = (action$, store) =>
     action$.ofType(actions.PLUI_EVOLUTION_SAVE_PLUIREQUEST)
         .switchMap((action) => {
             const url = backendURLPrefix + "/request";
@@ -363,23 +363,29 @@ export const savePluiRequest = (action$) =>
                 .switchMap((pluiRequestCreatead) => {
                     actualPluiRequestSaved = pluiRequestCreatead;
                     const attachmentsRequest = buildAttachmentsRequest(pluiRequestCreatead.uuid, action.attachments);
-                    return attachmentsRequest.length > 0 ? Rx.Observable.forkJoin(attachmentsRequest) : Rx.Observable.of([]);
+                    // Uploads sequentiels : evite les mises a jour concurrentes du meme ticket Redmine (CDCRM-2535)
+                    return attachmentsRequest.length > 0 ? Rx.Observable.concat(...attachmentsRequest).toArray() : Rx.Observable.of([]);
                 })
-                .switchMap(() => Rx.Observable.from([
-                    success({
-                        title: "pluievolution.success.title",
-                        message: "pluievolution.msgBox.requestSaved.message",
-                        uid: "pluievolution.msgBox.requestSaved",
-                        position: "tr",
-                        autoDismiss: 5
-                    }),
-                    closeRequest(),
-                    refreshLayerVersion(pluiEvolutionLayerId)
-                ]))
+                .switchMap(() => {
+                    const pluiLayer = head((store.getState().layers.flat || []).filter(l => l.id === pluiEvolutionLayerId));
+                    const refreshAction = pluiLayer
+                        ? Rx.Observable.of(refreshLayerVersion(pluiEvolutionLayerId)).delay(300)
+                        : Rx.Observable.empty();
+                    return Rx.Observable.from([
+                        success({
+                            title: "pluievolution.success.title",
+                            message: "pluievolution.msgBox.requestSaved.message",
+                            uid: "pluievolution.msgBox.requestSaved",
+                            position: "tr",
+                            autoDismiss: 5
+                        }),
+                        closeRequest()
+                    ]).concat(refreshAction);
+                })
                 .catch(e => {
                     // Erreur lors de l'enregistrement de la requete plui
                     if (e.saveError) {
-                        const backendLabel = e.response && e.response.data && e.response.data.label || '';
+                        const backendLabel = e.response?.data?.label || '';
                         const isOutsideArea = e.response && e.response.status === 400
                             && backendLabel.includes('emprise géographique');
                         const errorKey = isOutsideArea
@@ -494,7 +500,7 @@ export const displayPluiEtablissement = (action$, store) =>
                 .switchMap(response => Rx.Observable.of(response.data))
                 .catch(e => Rx.Observable.throw(e))
                 .switchMap((geographicEtablissement) => {
-                    const existingLocalisation = geographicEtablissement && geographicEtablissement.localisation && geographicEtablissement.localisation.coordinates && geographicEtablissement.localisation.coordinates.length > 0;
+                    const existingLocalisation = geographicEtablissement?.localisation?.coordinates?.length > 0;
                     let coordinates;
                     if (existingLocalisation && GeometryType.POINT === geographicEtablissement.localisation.type) {
                         coordinates = geographicEtablissement.localisation.coordinates;
@@ -553,7 +559,7 @@ export const startDrawingPluiEpic = action$ =>
                 window.pluiEvolution.debug("add defs...");
                 Proj4js.defs("EPSG:3948","+proj=lcc +lat_1=47.25 +lat_2=48.75 +lat_0=48 +lon_0=3 +x_0=1700000 +y_0=7200000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
             }
-            const existingLocalisation = action.localisation && action.localisation.coordinates && action.localisation.coordinates.length > 0;
+            const existingLocalisation = action.localisation?.coordinates?.length > 0;
             let coordinates = Array(0);
             if (existingLocalisation && GeometryType.POINT === action.localisation.type) {
                 coordinates = action.localisation.coordinates;
@@ -630,7 +636,7 @@ export const stopDrawingPluiEpic = (action$, store) =>
             };
 
             //work around to avoid import of draw.js - see issues with geosolutions
-            let actualFeatures = state && state.draw && state.draw.tempFeatures;
+            let actualFeatures = state?.draw?.tempFeatures;
             if (!actualFeatures || actualFeatures.length === 0) {
                 actualFeatures = [
                     {

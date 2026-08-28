@@ -100,11 +100,11 @@
 	background-color: white;
 }
 
-span .error {
+span.error {
 	color: red;
 }
 
-span .info {
+span.info {
 	color: orange;
 }
 

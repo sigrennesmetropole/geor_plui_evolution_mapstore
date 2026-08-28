@@ -9,20 +9,18 @@ import {
     FormControl,
     FormGroup,
     Glyphicon,
-    Grid,
     HelpBlock,
     InputGroup,
-    Radio,
-    Row
+    Radio
 } from 'react-bootstrap';
 import Message from '@mapstore/components/I18N/Message';
-import ConfirmDialog from '@mapstore/components/misc/ConfirmDialog';
+import ConfirmDialog from '@mapstore/components/layout/ConfirmDialog';
 import LoadingSpinner from '@mapstore/components/misc/LoadingSpinner';
 import {getMessageById} from '@mapstore/utils/LocaleUtils';
 import {getViewer, setViewer} from '@mapstore/utils/MapInfoUtils';
 import {closeIdentify} from '@mapstore/actions/mapInfo';
 import {PLUI_EVOLUTION_REQUEST_VIEWER, PluiEvolutionRequestViewer} from './PluiEvolutionRequestViewer';
-import {actions, openPanel, openPanelAuto, status} from '../actions/plui-evolution-action';
+import {openPanel, status} from '../actions/plui-evolution-action';
 import {
     GeometryType,
     MAX_NB_CHARACTERS_PLUI_OBJECT, PLUIEVOLUTION_PANEL_WIDTH, PLUIEVOLUTION_VIEWER_WIDTH,
@@ -30,7 +28,6 @@ import {
 } from '../constants/plui-evolution-constants';
 import {PluiEvolutionViewer} from "../components/PluiEvolutionViewer";
 import ResponsivePanel from "@mapstore/components/misc/panels/ResponsivePanel";
-import {toggleControl} from "@mapstore/actions/controls";
 import versionData from '../../version.json';
 
 export class PluiEvolutionPanelComponent extends React.Component {
@@ -306,7 +303,7 @@ export class PluiEvolutionPanelComponent extends React.Component {
                     glyph={null}
                     onClose={() => this.cancel()}>
                     <span>
-                        <div style={{'margin-top': '20px'}}>
+                        <div style={{marginTop: '20px'}}>
                             {
                                 (!this.state.initialized) &&
                                     this.renderLoading("pluievolution.open.loading")
@@ -393,29 +390,6 @@ export class PluiEvolutionPanelComponent extends React.Component {
                     <Message msgId={msgId} />
                 </div>
             </div>
-        );
-    }
-
-    /**
-     * La rendition de l'entête
-     */
-    renderHeader() {
-        return (
-            <Grid fluid className="ms-header" style={this.props.styling || this.props.mode !== "list" ? { width: '100%', boxShadow: 'none'} : { width: '100%' }}>
-                <Row>
-                    <Col xs={2}>
-                    </Col>
-                    <Col xs={8}>
-                        <h4><Message msgId="pluievolution.msgBox.title"/></h4>
-                        {this.renderMessage()}
-                    </Col>
-                    <Col xs={2}>
-                        <Button className="square-button no-border" onClick={() => this.cancel()} >
-                            <Glyphicon glyph={this.props.closeGlyph}/>
-                        </Button>
-                    </Col>
-                </Row>
-            </Grid>
         );
     }
 
@@ -510,6 +484,7 @@ export class PluiEvolutionPanelComponent extends React.Component {
                     {this.renderAttachments()}
                     {this.renderLocalisation()}
                     {this.renderRequestComment()}
+                    {this.renderMessage()}
                     {this.renderFormButton()}
                 </div>
             );
@@ -704,7 +679,7 @@ export class PluiEvolutionPanelComponent extends React.Component {
             return attachments.map((attachment, index) => {
                 if (this.props.readOnly) {
                     return (
-                        <tr key={index}>
+                        <tr key={attachment.id}>
                             <td className="col-sm-12">
                                 <Button bsStyle="link" onClick={() => this.props.downloadAttachment(attachment)}>{attachment.name}</Button>
                             </td>
@@ -713,7 +688,7 @@ export class PluiEvolutionPanelComponent extends React.Component {
                 }
                 else {
                     return (
-                        <tr key={index}>
+                        <tr key={attachment.id}>
                             <td className="col-sm-10">{attachment.name}</td>
                             <td className="col-sm-2">
                                 <Button className="btn btn-sq-xs btn-danger"

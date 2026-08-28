@@ -4,17 +4,18 @@
 const webpackConfig = require("../../webpack.config");
 const { name } = require('../../config');
 
-// emulate the extension root directory
-webpackConfig.devServer.proxy["/extension/"] = {
-    target: "http://localhost:8082"
+// emulate the extension root directory - proxy extensions/ to the ext:start dev server
+webpackConfig.devServer.proxy["/extensions/"] = {
+    target: "http://localhost:8082",
+    pathRewrite: { "^/extensions/": "/extension/" }
 };
 // emulate the extensions.json
 webpackConfig.devServer.before = function(app) {
-    app.get("/extensions.json", function(req, res) {
+    app.get("/extensions/extensions.json", function(req, res) {
         res.json({
             [name]: {
-                "bundle": "extension/index.js",
-                "translations": "extension/translations"
+                "bundle": "index.js",
+                "translations": "translations"
             }
         });
     });
